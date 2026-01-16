@@ -37,7 +37,7 @@ public class SecurityConfig {
             "/refreshToken",
             "/swagger-ui/**",
             "/v3/api-docs/**",
-            "swagger-ui.html",
+            "/swagger-ui.html",
             "/api/ai/**"
 
     };

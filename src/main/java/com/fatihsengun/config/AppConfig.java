@@ -1,6 +1,9 @@
 package com.fatihsengun.config;
 
 
+import com.fatihsengun.exception.BaseException;
+import com.fatihsengun.exception.ErrorMessage;
+import com.fatihsengun.exception.MessageType;
 import com.fatihsengun.repository.AuthRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +27,19 @@ public class AppConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         //HATA
-        return username -> authRepository.findByEmail(username);
+        return username -> authRepository.findByEmail(username).orElseThrow(() ->
+                new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, username)));
 
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
-        throws Exception{
+            throws Exception {
         return configuration.getAuthenticationManager();
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
@@ -42,7 +47,7 @@ public class AppConfig {
     }
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
