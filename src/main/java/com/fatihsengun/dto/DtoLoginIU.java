@@ -1,5 +1,7 @@
 package com.fatihsengun.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,9 +14,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DtoLoginIU {
 
-    @NotEmpty
+    @NotBlank(message = "The email field cannot be left blank.")
+    @Email
     private String email;
 
-    @NotEmpty
+    @NotBlank(message = "The password field cannot be left blank.")
     private String password;
 }

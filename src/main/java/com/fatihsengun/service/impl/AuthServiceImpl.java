@@ -5,6 +5,8 @@ import com.fatihsengun.dto.DtoLoginIU;
 import com.fatihsengun.dto.DtoRegister;
 import com.fatihsengun.dto.DtoRegisterUI;
 import com.fatihsengun.entity.User;
+import com.fatihsengun.entity.Wallet;
+import com.fatihsengun.enums.RoleType;
 import com.fatihsengun.exception.BaseException;
 import com.fatihsengun.exception.ErrorMessage;
 import com.fatihsengun.exception.MessageType;
@@ -18,6 +20,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -42,8 +45,19 @@ public class AuthServiceImpl implements IAuthService {
 
         User user = globalMapper.toUserEntity(dtoRegisterUI);
         user.setPassword(passwordEncoder.encode(dtoRegisterUI.getPassword()));
-        user = authRepository.save(user);
-        return globalMapper.toDtoRegister(user);
+        user.setRole(RoleType.USER);
+
+        //wallet
+        Wallet wallet = new Wallet();
+        wallet.setBalance(BigDecimal.ZERO);
+        wallet.setCurrency("TRY");
+        wallet.setUser(user);
+
+        user.setWallet( wallet);
+
+
+        User savedUser = authRepository.save(user);
+        return globalMapper.toDtoRegister(savedUser);
     }
 
     public DtoLogin authenticate(DtoLoginIU dtoLoginIU) {

@@ -3,6 +3,7 @@ package com.fatihsengun.entity;
 import com.fatihsengun.enums.RoleType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,11 +20,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
-public class User implements UserDetails {
+public class User extends BaseEntity implements UserDetails {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -31,13 +30,18 @@ public class User implements UserDetails {
     @Column(nullable=false)
     private String password ;
 
-    private String fullName;
+    @Column(nullable = false)
+    private String firstName;
+
+    @Column(nullable = false)
+    private String lastName;
 
     @Enumerated(EnumType.STRING)
     private RoleType role;
 
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Wallet wallet;
+
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
