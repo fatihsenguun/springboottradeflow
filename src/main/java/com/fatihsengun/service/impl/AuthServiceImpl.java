@@ -4,6 +4,7 @@ import com.fatihsengun.dto.DtoLogin;
 import com.fatihsengun.dto.DtoLoginIU;
 import com.fatihsengun.dto.DtoRegister;
 import com.fatihsengun.dto.DtoRegisterUI;
+import com.fatihsengun.entity.RefreshToken;
 import com.fatihsengun.entity.User;
 import com.fatihsengun.entity.Wallet;
 import com.fatihsengun.enums.RoleType;
@@ -13,9 +14,12 @@ import com.fatihsengun.exception.MessageType;
 import com.fatihsengun.jwt.JwtService;
 import com.fatihsengun.mapper.IGlobalMapper;
 import com.fatihsengun.repository.AuthRepository;
+import com.fatihsengun.repository.RefreshTokenRepository;
 import com.fatihsengun.service.IAuthService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class AuthServiceImpl implements IAuthService {
 
@@ -39,6 +44,12 @@ public class AuthServiceImpl implements IAuthService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
+
+    @Autowired
+    private RefreshTokenServiceImpl refreshTokenService;
+
 
     @Override
     public DtoRegister register(DtoRegisterUI dtoRegisterUI) {
@@ -53,7 +64,7 @@ public class AuthServiceImpl implements IAuthService {
         wallet.setCurrency("TRY");
         wallet.setUser(user);
 
-        user.setWallet( wallet);
+        user.setWallet(wallet);
 
 
         User savedUser = authRepository.save(user);
@@ -65,17 +76,24 @@ public class AuthServiceImpl implements IAuthService {
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                     dtoLoginIU.getEmail(), dtoLoginIU.getPassword());
             authenticationProvider.authenticate(auth);
-            User optional = authRepository.findByEmail(dtoLoginIU.getEmail()).orElseThrow(
+            User user = authRepository.findByEmail(dtoLoginIU.getEmail()).orElseThrow(
                     () -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, dtoLoginIU.getEmail())));
+            Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findRefreshTokenByUserId(user.getId());
+            if (optionalRefreshToken.isPresent()) {
+                refreshTokenRepository.delete(optionalRefreshToken.get());
 
+            }
+            String accessToken = jwtService.generateToken(user);
+            RefreshToken refreshToken = refreshTokenService.saveRefreshToken(user);
+            return new DtoLogin(accessToken, refreshToken.getRefreshToken());
 
-            String accessToken = jwtService.generateToken(optional);
-            return new DtoLogin(accessToken);
-
+        } catch (BadCredentialsException e) {
+            throw new BadCredentialsException("Invalid Username or Password");
         } catch (Exception e) {
-            throw new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, dtoLoginIU.getEmail()));
-        }
+            log.error("Login error : {}", e.getMessage());
+            throw new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, dtoLoginIU.getEmail()));
 
+        }
 
     }
 }

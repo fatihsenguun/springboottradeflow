@@ -1,5 +1,6 @@
 package com.fatihsengun.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,11 +10,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DtoLogin  {
-    public String accessToken;
+public class DtoRefreshTokenUI {
 
-    public String refreshToken;
-
-
-
+    @NotEmpty
+    private String refreshToken;
 }

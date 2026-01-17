@@ -11,7 +11,9 @@ import org.aspectj.bridge.Message;
 public enum MessageType {
 
     NO_RECORD_EXIST("1001", "No Record Exist!"),
-    GENERAL_EXCEPTION("9999", "A General Error Occured");
+    GENERAL_EXCEPTION("9999", "A General Error Occured"),
+    TOKEN_EXPIRED("1002", "Token Expired!");
+
 
     private String code;
 
