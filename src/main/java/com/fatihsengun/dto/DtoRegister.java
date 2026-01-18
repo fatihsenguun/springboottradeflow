@@ -3,7 +3,9 @@ package com.fatihsengun.dto;
 import com.fatihsengun.entity.BaseEntity;
 import com.fatihsengun.enums.RoleType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,6 +14,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class DtoRegister extends BaseEntity {
 
 
