@@ -32,14 +32,18 @@ public class EmailSenderService {
 
     public void sendEmail(String toEmail, String subject, String body) {
 
-        SimpleMailMessage message = new SimpleMailMessage();
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
 
-        message.setFrom(fromEmail);
-        message.setTo(toEmail);
-        message.setText(body);
-        message.setSubject(subject);
+            message.setFrom(fromEmail);
+            message.setTo(toEmail);
+            message.setText(body);
+            message.setSubject(subject);
 
-        mailSender.send(message);
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, "Email could not be sent."));
+        }
     }
 
 
@@ -58,6 +62,29 @@ public class EmailSenderService {
         sendEmail(user.getEmail(), subject, body);
         log.info("✅ Order confirmation email sent: {}");
 
+    }
+    public void sendUpdateOrder(OrderEventModel event) {
+        User user = authRepository.findById(event.getUserId()).orElseThrow(
+                () -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, "userId: " + event.getUserId())));
+        String subject = "Order Status Update! 🚚";
+        String body = String.format("""
+                Dear %s %s,
+                
+                The status of your order #%s (Total: %.2f TL) has been updated.
+                
+                You can check the latest status and tracking details on your account dashboard.
+                
+                Thank you for choosing us!
+                TradeFlow Team
+                """,
+                user.getFirstName(),
+                user.getLastName(),
+                event.getOrderId(),
+                event.getTotalAmount()
+        );
+
+        sendEmail(user.getEmail(), subject, body);
+        log.info("✅ Order update email sent to: {}", user.getEmail());
     }
 
 }

@@ -1,6 +1,8 @@
 package com.fatihsengun.kafka;
 
+import com.fatihsengun.service.EmailSenderService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -8,11 +10,24 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class KafkaConsumerService {
 
-    @KafkaListener(topics = "order-create", groupId = "tradeflow_group")
-    public void consume(OrderEventModel event){
+    @Autowired
+    private EmailSenderService emailSenderService;
 
-        log.info("kafka mesajı yakaladı");
-        log.info("sipariş no: {}", event.getOrderId());
+
+    @KafkaListener(topics = "order-create", groupId = "tradeflow_group")
+    public void consume(OrderEventModel event) {
+
+        log.info("Mail Sending...");
+        emailSenderService.sendOrderCreateMail(event);
+
+
+    }
+
+    @KafkaListener(topics = "order-status-changed", groupId = "tradeflow_group")
+    public void updateConsume(OrderEventModel event) {
+
+        log.info("Mail Sending...");
+        emailSenderService.sendUpdateOrder(event);
 
 
     }

@@ -12,6 +12,8 @@ import com.fatihsengun.repository.CategoryRepository;
 import com.fatihsengun.repository.ProductRepository;
 import com.fatihsengun.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -62,5 +64,13 @@ public class ProductServiceImpl implements IProductService {
         product.setStock(product.getStock() - quantity);
 
         productRepository.save(product);
+    }
+
+    @Override
+    public Page<DtoProduct> getProductsByCategories(List<UUID> categoryIds, Pageable pageable) {
+
+        Page<Product> productPage = productRepository.findAllByCategories_IdIn(categoryIds, pageable);
+
+        return productPage.map(globalMapper::toDtoProduct);
     }
 }

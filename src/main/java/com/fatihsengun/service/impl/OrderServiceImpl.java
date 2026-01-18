@@ -47,8 +47,6 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     private IProductService productService;
 
-    @Autowired
-    private EmailSenderService mailSender;
 
     @Override
     @Transactional
@@ -105,7 +103,6 @@ public class OrderServiceImpl implements IOrderService {
 
         kafkaProducerService.sendMessage("order-create", event);
 
-        mailSender.sendOrderCreateMail(event);
         return globalMapper.toDtoOrder(savedOrder);
 
     }

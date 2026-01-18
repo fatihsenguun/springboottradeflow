@@ -8,10 +8,13 @@ import com.fatihsengun.entity.RootResponseEntity;
 import com.fatihsengun.service.impl.ProductServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/rest/api/product")
@@ -26,5 +29,13 @@ public class RestProductControllerImpl extends RestRootResponseController implem
     public RootResponseEntity<DtoProduct> addProduct(@Valid @RequestBody DtoProductUI dtoProductUI) {
 
         return ok(productService.addProduct(dtoProductUI));
+    }
+
+    @Override
+    @GetMapping("/filter")
+    public RootResponseEntity<Page<DtoProduct>> getProductsByCategories(
+            @RequestParam(name = "categories") List<UUID> categoryIds,
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        return ok(productService.getProductsByCategories(categoryIds, pageable));
     }
 }

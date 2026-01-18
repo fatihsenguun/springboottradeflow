@@ -1,10 +1,7 @@
 package com.fatihsengun.mapper;
 
 import com.fatihsengun.dto.*;
-import com.fatihsengun.entity.Category;
-import com.fatihsengun.entity.Order;
-import com.fatihsengun.entity.Product;
-import com.fatihsengun.entity.User;
+import com.fatihsengun.entity.*;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
@@ -24,6 +21,10 @@ public interface IGlobalMapper {
     Order toOrderEntity(DtoOrderUI dtoOrderUI);
 
     DtoOrder toDtoOrder(Order order);
+
+    Wallet toWalletEntity(DtoWalletUI dtoWalletUI);
+
+    DtoWallet toDtoWallet(Wallet wallet);
 
 
 }
