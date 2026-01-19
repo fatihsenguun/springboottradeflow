@@ -9,4 +9,6 @@ public interface IRestCategoryController {
 
     public RootResponseEntity<DtoCategory> addCategory(DtoCategoryUI dtoCategoryUI);
 
+
+
 }

@@ -11,6 +11,7 @@ import java.util.UUID;
 
 public interface IProductService {
 
+    public DtoProduct delete(UUID id);
 
     public DtoProduct addProduct(DtoProductUI dtoProductUI);
 
@@ -18,5 +19,6 @@ public interface IProductService {
 
     public void decreaseStock(Product product, Integer quantity);
 
-    public Page<DtoProduct> getProductsByCategories(List<UUID> categoryIds, Pageable pageable);
+    public Page<DtoProduct> getProductsWithAllCategories(List<UUID> categoryIds, Pageable pageable);
+
 }

@@ -36,6 +36,12 @@ public class RestProductControllerImpl extends RestRootResponseController implem
     public RootResponseEntity<Page<DtoProduct>> getProductsByCategories(
             @RequestParam(name = "categories") List<UUID> categoryIds,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        return ok(productService.getProductsByCategories(categoryIds, pageable));
+        return ok(productService.getProductsWithAllCategories(categoryIds, pageable));
+    }
+
+    @Override
+    @DeleteMapping("/delete/{id}")
+    public RootResponseEntity<DtoProduct> delete(@PathVariable(name = "id") UUID id) {
+        return ok(productService.delete(id));
     }
 }

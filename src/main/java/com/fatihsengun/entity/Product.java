@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,6 +16,9 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
+
+@SQLRestriction("is_deleted=false")
 public class Product extends BaseEntity {
 
     @Column(nullable = false)
@@ -28,6 +32,9 @@ public class Product extends BaseEntity {
 
     @Column(nullable = false)
     private Integer stock;
+
+    @Column(name = "is_deleted", nullable=false)
+    private boolean isDeleted = false;
 
 
 
