@@ -35,4 +35,6 @@ public class DtoProductUI {
     @NotNull
     private List<UUID> categoryIds;
 
+    private List<DtoProductImageUI> images;
+
 }

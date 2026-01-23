@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,7 +34,7 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private Integer stock;
 
-    @Column(name = "is_deleted", nullable=false)
+    @Column(name = "is_deleted", nullable=false, columnDefinition = "boolean default false")
     private boolean isDeleted = false;
 
 
@@ -45,6 +46,9 @@ public class Product extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private List<Category> categories;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductImage> images = new ArrayList<>();
 
 
 }

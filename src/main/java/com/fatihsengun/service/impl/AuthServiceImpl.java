@@ -83,9 +83,14 @@ public class AuthServiceImpl implements IAuthService {
                 refreshTokenRepository.delete(optionalRefreshToken.get());
 
             }
-            String accessToken = jwtService.generateToken(user);
-            RefreshToken refreshToken = refreshTokenService.saveRefreshToken(user);
-            return new DtoLogin(accessToken, refreshToken.getRefreshToken());
+            DtoLogin dtoLogin = new DtoLogin();
+
+            dtoLogin.setAccessToken(jwtService.generateToken(user));
+            dtoLogin.setRefreshToken(refreshTokenService.saveRefreshToken(user).getRefreshToken());
+            dtoLogin.setFirstName(user.getFirstName());
+            dtoLogin.setLastName(user.getLastName());
+            dtoLogin.setRole(user.getRole());
+            return dtoLogin;
 
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException("Invalid Username or Password");

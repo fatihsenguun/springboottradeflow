@@ -20,4 +20,5 @@ public class DtoProduct extends BaseEntity {
     private Integer stock;
 
     private List<DtoCategory> categories;
+    private List<DtoProduct> images;
 }
