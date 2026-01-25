@@ -1,7 +1,10 @@
 package com.fatihsengun.handler;
 
 import com.fatihsengun.exception.BaseException;
+import com.fatihsengun.exception.ErrorMessage;
+import com.fatihsengun.exception.MessageType;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -14,6 +17,7 @@ import javax.naming.AuthenticationException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.file.AccessDeniedException;
 import java.util.*;
 
 
@@ -25,6 +29,14 @@ public class GlobalExceptionHandler {
 
     public GlobalExceptionHandler(HttpServletResponse httpServletResponse) {
         this.httpServletResponse = httpServletResponse;
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity handleAccessDeniedException(AccessDeniedException ex){
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                new ErrorMessage(MessageType.GENERAL_EXCEPTION,"You must have ADMIN privileges to view this page.")
+        );
     }
 
 

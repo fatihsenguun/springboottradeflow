@@ -27,4 +27,6 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
             Pageable pageable
     );
 
+    List<Product> findTop5ByOrderByTotalSalesCountDesc();
+
 }

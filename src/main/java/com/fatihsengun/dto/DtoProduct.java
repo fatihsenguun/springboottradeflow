@@ -18,7 +18,7 @@ public class DtoProduct extends BaseEntity {
     private String description;
     private BigDecimal price;
     private Integer stock;
-
+    private Integer totalSalesCount;
     private List<DtoCategory> categories;
-    private List<DtoProduct> images;
+    private List<DtoProductImage> images;
 }

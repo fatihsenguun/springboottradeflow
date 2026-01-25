@@ -34,9 +34,11 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private Integer stock;
 
-    @Column(name = "is_deleted", nullable=false, columnDefinition = "boolean default false")
-    private boolean isDeleted = false;
+    @Column(name = "total_sales_count", nullable = false, columnDefinition = "int default 0")
+    private Integer totalSalesCount = 0;
 
+    @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
+    private boolean isDeleted = false;
 
 
     @ManyToMany
@@ -47,7 +49,7 @@ public class Product extends BaseEntity {
     )
     private List<Category> categories;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true ,fetch = FetchType.EAGER)
     private List<ProductImage> images = new ArrayList<>();
 
 

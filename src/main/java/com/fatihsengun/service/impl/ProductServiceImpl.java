@@ -4,6 +4,7 @@ import com.fatihsengun.dto.DtoProduct;
 import com.fatihsengun.dto.DtoProductUI;
 import com.fatihsengun.entity.Category;
 import com.fatihsengun.entity.Product;
+import com.fatihsengun.entity.ProductImage;
 import com.fatihsengun.exception.BaseException;
 import com.fatihsengun.exception.ErrorMessage;
 import com.fatihsengun.exception.MessageType;
@@ -11,6 +12,7 @@ import com.fatihsengun.mapper.IGlobalMapper;
 import com.fatihsengun.repository.CategoryRepository;
 import com.fatihsengun.repository.ProductRepository;
 import com.fatihsengun.service.IProductService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -46,6 +48,7 @@ public class ProductServiceImpl implements IProductService {
 
 
     @Override
+    @Transactional
     @CacheEvict(value = {"product_filter", "product_detail"}, allEntries = true)
     public DtoProduct addProduct(DtoProductUI dtoProductUI) {
         Product product = globalMapper.toProductEntity(dtoProductUI);
@@ -59,6 +62,12 @@ public class ProductServiceImpl implements IProductService {
         }
         product.setCategories(categories);
 
+        if (product.getImages() !=null){
+            for (ProductImage image : product.getImages()){
+                image.setProduct(product);
+            }
+        }
+
 
         return globalMapper.toDtoProduct(productRepository.save(product));
     }
@@ -71,12 +80,14 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
+    @Transactional
     public void decreaseStock(Product product, Integer quantity) {
 
         if (product.getStock() < quantity) {
             throw new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, "Insufficient stock: " + product.getName()));
         }
         product.setStock(product.getStock() - quantity);
+        product.setTotalSalesCount(product.getTotalSalesCount()+quantity);
 
         productRepository.save(product);
     }

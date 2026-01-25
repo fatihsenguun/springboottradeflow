@@ -81,6 +81,7 @@ public class OrderServiceImpl implements IOrderService {
 
             productService.decreaseStock(product, itemUI.getQuantity());
 
+
         }
         if (wallet.getBalance().compareTo(total) < 0) {
             throw new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, "insufficient balance" + total));

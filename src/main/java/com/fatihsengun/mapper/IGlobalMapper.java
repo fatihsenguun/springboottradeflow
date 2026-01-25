@@ -4,6 +4,8 @@ import com.fatihsengun.dto.*;
 import com.fatihsengun.entity.*;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface IGlobalMapper {
     User toUserEntity(DtoRegisterUI dtoRegisterUI);
@@ -13,6 +15,10 @@ public interface IGlobalMapper {
     Product toProductEntity(DtoProductUI dtoProductUI);
 
     DtoProduct toDtoProduct(Product product);
+
+    List<Product> toListProductEntity(List<DtoProductUI> dtoProductUI);
+
+    List<DtoProduct> toListDtoProduct(List<Product> products);
 
     Category toCategoryEntity(DtoCategoryUI dtoCategoryUI);
 
