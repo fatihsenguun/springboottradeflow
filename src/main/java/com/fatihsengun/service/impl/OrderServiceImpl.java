@@ -135,10 +135,7 @@ public class OrderServiceImpl implements IOrderService {
 
     public List<DtoOrder> getMyOrders() {
 
-        User currentUser = identityService.getCurrentUser();
-        List<Order> orders = orderRepository.findByUserOrderByCreatedAtDesc(currentUser).orElseThrow(
-                () -> new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, "No Order")));
-        return orders.stream().map(globalMapper::toDtoOrder).toList();
+        return null;
     }
 }
 

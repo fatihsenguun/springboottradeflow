@@ -13,6 +13,6 @@ import java.util.UUID;
 public interface OrderItemRepository extends JpaRepository<OrderItem, UUID> {
 
 
-    public Optional<List<OrderItem>> findTop10ByCreatedAtDesc();
+    public List<OrderItem> findTop10ByOrderByCreatedAtDesc();
 }
 

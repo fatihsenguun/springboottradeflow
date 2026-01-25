@@ -32,5 +32,7 @@ public interface IGlobalMapper {
 
     DtoWallet toDtoWallet(Wallet wallet);
 
+    DtoOrderItem toDtoOrderItem(OrderItem orderItem);
+
 
 }
