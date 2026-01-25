@@ -5,6 +5,7 @@ import com.fatihsengun.entity.User;
 import com.fatihsengun.enums.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -20,5 +21,8 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     @Query("SELECT SUM(o.totalAmount) FROM Order o WHERE o.status!='REFUNDED' ")
     public BigDecimal sumTotalSales();
 
-     public Optional<List<Order>> findByUserOrderByCreatedAtDesc(User user);
+
+
+     @Query("SELECT SUM(oi.priceAtPurchase *oi.quantity)"+ "FROM OrderItem oi JOIN oi.order o"+" WHERE oi.product.id = :productId AND o.status!='REFUNDED'")
+     public BigDecimal sumTotalEarningByProductId(@Param("productId") UUID productId);
 }

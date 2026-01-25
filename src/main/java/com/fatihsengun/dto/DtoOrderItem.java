@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class DtoOrderItem extends BaseEntity {
 
-
+private DtoProduct product;
 
     private Integer quantity;
 

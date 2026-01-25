@@ -1,5 +1,6 @@
 package com.fatihsengun.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +21,7 @@ import java.util.List;
 
 
 @SQLRestriction("is_deleted=false")
+
 public class Product extends BaseEntity {
 
     @Column(nullable = false)

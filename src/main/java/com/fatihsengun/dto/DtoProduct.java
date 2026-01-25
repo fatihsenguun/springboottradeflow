@@ -21,4 +21,5 @@ public class DtoProduct extends BaseEntity {
     private Integer totalSalesCount;
     private List<DtoCategory> categories;
     private List<DtoProductImage> images;
+    private BigDecimal totalEarning;
 }

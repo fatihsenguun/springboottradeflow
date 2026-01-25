@@ -38,7 +38,7 @@ public class ProductServiceImpl implements IProductService {
 
 
     @Override
-    @CacheEvict(value = {"product_filter", "product_detail"}, allEntries = true)
+
     public DtoProduct delete(UUID id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new BaseException(
                 new ErrorMessage(MessageType.GENERAL_EXCEPTION, id.toString())));
@@ -49,7 +49,7 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     @Transactional
-    @CacheEvict(value = {"product_filter", "product_detail"}, allEntries = true)
+
     public DtoProduct addProduct(DtoProductUI dtoProductUI) {
         Product product = globalMapper.toProductEntity(dtoProductUI);
 
@@ -73,7 +73,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    @Cacheable(value = "product_detail", key = "#id")
+
     public Product getProductById(UUID id) {
         return productRepository.findById(id).orElseThrow(() -> new BaseException(
                 new ErrorMessage(MessageType.NO_RECORD_EXIST, "id:" + id)));

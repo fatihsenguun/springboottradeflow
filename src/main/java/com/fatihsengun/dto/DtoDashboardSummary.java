@@ -14,5 +14,6 @@ public class DtoDashboardSummary {
     private Long orderCount;
     private Long productCount;
     private List<DtoProduct> topSellingProducts;
+    private List<DtoOrderItem> lastOrders;
 
 }
