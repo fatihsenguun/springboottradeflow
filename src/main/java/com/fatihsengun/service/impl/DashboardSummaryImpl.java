@@ -1,5 +1,6 @@
 package com.fatihsengun.service.impl;
 
+import com.fatihsengun.dto.DtoChartData;
 import com.fatihsengun.dto.DtoDashboardSummary;
 import com.fatihsengun.dto.DtoOrderItem;
 import com.fatihsengun.dto.DtoProduct;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,4 +72,17 @@ public class DashboardSummaryImpl implements IDashboardService {
         return summary;
 
     }
+
+public List<DtoChartData> getChartStatictics(LocalDateTime startDate, LocalDateTime endDate){
+        List<Object[]> rawData = orderRepository.getDailyStatistics(startDate,endDate);
+
+        return rawData.stream().map(result->{
+            DtoChartData data = new DtoChartData();
+            data.setName((String) result[0]);
+            data.setSales((BigDecimal) result[1]);
+            return data;
+        }).collect(Collectors.toList());
+}
+
+
 }
