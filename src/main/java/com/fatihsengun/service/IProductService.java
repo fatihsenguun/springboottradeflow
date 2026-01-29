@@ -22,4 +22,5 @@ public interface IProductService {
 
     public Page<DtoProduct> getProductsWithAllCategories(List<UUID> categoryIds, Pageable pageable);
 
+    public Page<DtoProduct> getAllProductsPageable(int page, int size);
 }

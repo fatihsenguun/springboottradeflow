@@ -17,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -62,8 +64,8 @@ public class ProductServiceImpl implements IProductService {
         }
         product.setCategories(categories);
 
-        if (product.getImages() !=null){
-            for (ProductImage image : product.getImages()){
+        if (product.getImages() != null) {
+            for (ProductImage image : product.getImages()) {
                 image.setProduct(product);
             }
         }
@@ -87,7 +89,7 @@ public class ProductServiceImpl implements IProductService {
             throw new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, "Insufficient stock: " + product.getName()));
         }
         product.setStock(product.getStock() - quantity);
-        product.setTotalSalesCount(product.getTotalSalesCount()+quantity);
+        product.setTotalSalesCount(product.getTotalSalesCount() + quantity);
 
         productRepository.save(product);
     }
@@ -106,5 +108,16 @@ public class ProductServiceImpl implements IProductService {
         Page<Product> productPage = productRepository.findProductsWithAllCategories(categoryIds, listSize, pageable);
 
         return productPage.map(globalMapper::toDtoProduct);
+    }
+
+    @Override
+    public Page<DtoProduct> getAllProductsPageable(int page,int size) {
+
+        Pageable pageable = PageRequest.of(page,size, Sort.by("createdAt").descending());
+
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        return productPage.map(product -> globalMapper.toDtoProduct(product));
+
     }
 }

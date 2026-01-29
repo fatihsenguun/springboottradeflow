@@ -13,8 +13,9 @@ public interface IRestProductController {
     public RootResponseEntity<DtoProduct> addProduct(DtoProductUI dtoProductUI);
 
 
-
     public RootResponseEntity<Page<DtoProduct>> getProductsByCategories(List<UUID> categoryIds, Pageable pageable);
 
     public RootResponseEntity<DtoProduct> delete(UUID id);
+
+    public RootResponseEntity<Page<DtoProduct>> getAllProducts(int page, int size);
 }
