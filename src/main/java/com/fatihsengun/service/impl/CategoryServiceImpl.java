@@ -10,6 +10,9 @@ import com.fatihsengun.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class CategoryServiceImpl implements ICategoryService {
 
@@ -24,5 +27,17 @@ public class CategoryServiceImpl implements ICategoryService {
         Category category = globalMapper.toCategoryEntity(dtoCategoryUI);
 
         return globalMapper.toDtoCategory(categoryRepository.save(category));
+    }
+
+    @Override
+    public List<DtoCategory> getAllCategory() {
+        List<Category> allCategory = categoryRepository.findAll();
+        List<DtoCategory> dtoCategories = new ArrayList<>();
+        for (Category category : allCategory) {
+
+            DtoCategory dtoCategory = globalMapper.toDtoCategory(category);
+            dtoCategories.add(dtoCategory);
+        }
+        return dtoCategories;
     }
 }

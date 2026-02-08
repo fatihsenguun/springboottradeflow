@@ -9,10 +9,9 @@ import com.fatihsengun.service.ICategoryService;
 import com.fatihsengun.service.impl.CategoryServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/rest/api/category")
@@ -26,6 +25,12 @@ public class RestCategoryControllerImpl extends RestRootResponseController imple
     @PostMapping("/add")
     public RootResponseEntity<DtoCategory> addCategory(@Valid @RequestBody DtoCategoryUI dtoCategoryUI) {
         return ok(categoryService.addCategory(dtoCategoryUI));
+    }
+
+    @Override
+    @GetMapping("/all")
+    public RootResponseEntity<List<DtoCategory>> getAllCategory() {
+        return ok(categoryService.getAllCategory());
     }
 }
 

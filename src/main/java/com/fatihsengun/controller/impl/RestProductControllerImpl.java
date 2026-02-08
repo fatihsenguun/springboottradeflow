@@ -39,8 +39,8 @@ public class RestProductControllerImpl extends RestRootResponseController implem
         return ok(productService.getProductsWithAllCategories(categoryIds, pageable));
     }
 
-    @DeleteMapping("/d
-    @Overrideelete/{id}")
+    @Override
+    @DeleteMapping("/delete/{id}")
     public RootResponseEntity<DtoProduct> delete(@PathVariable(name = "id") UUID id) {
         return ok(productService.delete(id));
     }
