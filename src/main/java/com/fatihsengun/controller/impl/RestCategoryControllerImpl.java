@@ -9,9 +9,11 @@ import com.fatihsengun.service.ICategoryService;
 import com.fatihsengun.service.impl.CategoryServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/rest/api/category")
@@ -31,6 +33,12 @@ public class RestCategoryControllerImpl extends RestRootResponseController imple
     @GetMapping("/all")
     public RootResponseEntity<List<DtoCategory>> getAllCategory() {
         return ok(categoryService.getAllCategory());
+    }
+
+    @Override
+    @DeleteMapping("/delete")
+    public RootResponseEntity<DtoCategory> deleteCategory(@RequestParam("id") UUID categoryId) {
+        return ok(categoryService.deleteCategory(categoryId));
     }
 }
 

@@ -43,7 +43,7 @@ public class Product extends BaseEntity {
     private boolean isDeleted = false;
 
 
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(
             name = "product_categories",
             joinColumns = @JoinColumn(name = "product_id"),
