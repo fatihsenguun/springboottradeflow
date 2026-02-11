@@ -12,6 +12,7 @@ import com.fatihsengun.mapper.IGlobalMapper;
 import com.fatihsengun.repository.CategoryRepository;
 import com.fatihsengun.repository.ProductRepository;
 import com.fatihsengun.service.IProductService;
+import com.fatihsengun.service.RestPageImpl;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -27,7 +28,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class ProductServiceImpl implements IProductService {
+public class  ProductServiceImpl implements IProductService {
 
     @Autowired
     private IGlobalMapper globalMapper;
@@ -100,14 +101,16 @@ public class ProductServiceImpl implements IProductService {
     public Page<DtoProduct> getProductsWithAllCategories(List<UUID> categoryIds, Pageable pageable) {
 
         if (categoryIds == null || categoryIds.isEmpty()) {
-            return Page.empty();
+            return new RestPageImpl<>(new ArrayList<>());
         }
 
         long listSize = categoryIds.size();
 
         Page<Product> productPage = productRepository.findProductsWithAllCategories(categoryIds, listSize, pageable);
 
-        return productPage.map(globalMapper::toDtoProduct);
+        Page<DtoProduct> dtoPage = productPage.map((globalMapper::toDtoProduct));
+
+        return new RestPageImpl<>(dtoPage.getContent(), pageable, dtoPage.getTotalElements());
     }
 
     @Override

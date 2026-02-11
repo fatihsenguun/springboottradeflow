@@ -17,10 +17,12 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     Page<Product> findAllByCategories_IdIn(List<UUID> categories, Pageable pageable);
 
-    @Query("SELECT p FROM Product p JOIN p.categories c " +
-            "WHERE c.id IN :categoryIds " +
-            "GROUP BY p.id " +
-            "HAVING COUNT(DISTINCT c.id) = :listSize")
+    @Query("SELECT p FROM Product p WHERE p.id IN (" +
+            "  SELECT p2.id FROM Product p2 JOIN p2.categories c " +
+            "  WHERE c.id IN :categoryIds " +
+            "  GROUP BY p2.id " +
+            "  HAVING COUNT(DISTINCT c.id) = :listSize" +
+            ")")
     Page<Product> findProductsWithAllCategories(
             @Param("categoryIds") List<UUID> categoryIds,
             @Param("listSize") Long listSize,
