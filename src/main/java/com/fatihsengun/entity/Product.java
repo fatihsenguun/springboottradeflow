@@ -42,6 +42,8 @@ public class Product extends BaseEntity {
     @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
     private boolean isDeleted = false;
 
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<Favorite> favorites;
 
     @ManyToMany()
     @JoinTable(
@@ -51,7 +53,7 @@ public class Product extends BaseEntity {
     )
     private List<Category> categories;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true ,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<ProductImage> images = new ArrayList<>();
 
 

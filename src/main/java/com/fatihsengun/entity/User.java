@@ -42,6 +42,9 @@ public class User extends BaseEntity implements UserDetails {
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Wallet wallet;
 
+    @OneToMany(mappedBy = "user")
+    private List<Favorite> favorite;
+
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

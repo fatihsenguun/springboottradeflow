@@ -34,5 +34,7 @@ public interface IGlobalMapper {
 
     DtoOrderItem toDtoOrderItem(OrderItem orderItem);
 
+    DtoFavorite toDtoFavorite(Favorite favorite);
+
 
 }
