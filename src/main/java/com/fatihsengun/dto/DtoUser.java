@@ -18,5 +18,6 @@ public class DtoUser extends BaseEntity {
 
     private RoleType role;
 
+
     private DtoWallet wallet;
 }
