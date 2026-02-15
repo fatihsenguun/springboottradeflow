@@ -23,10 +23,10 @@ public class RestFavoriteControllerImpl extends RestRootResponseController imple
     private FavoriteServiceImpl favoriteService;
 
     @Override
-    @PostMapping("/add")
+    @PostMapping("/toggle")
     public RootResponseEntity<DtoFavorite> addFavorite(DtoFavoriteIU dtoFavoriteIU) {
 
-        return ok(favoriteService.addFavorite(dtoFavoriteIU));
+        return ok(favoriteService.toggleFavorite(dtoFavoriteIU));
     }
 
     @Override

@@ -10,7 +10,7 @@ import java.util.UUID;
 @Setter
 public class DtoFavoriteIU {
 
-    public UUID user;
+
 
     public UUID product;
 

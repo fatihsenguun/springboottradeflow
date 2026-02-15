@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FavoriteServiceImpl implements IFavoriteService {
@@ -36,18 +37,29 @@ public class FavoriteServiceImpl implements IFavoriteService {
     private ProductRepository productRepository;
 
     @CacheEvict(value = "product_filter", allEntries = true)
-    public DtoFavorite addFavorite(DtoFavoriteIU dtoFavoriteIU) {
+    public DtoFavorite toggleFavorite(DtoFavoriteIU dtoFavoriteIU) {
+
         User user = identityService.getCurrentUser();
-        Product product = productRepository.findById(dtoFavoriteIU.getProduct())
-                .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, "User not found")));
 
-        Favorite favorite = new Favorite();
+        Optional<Favorite> optional = favoriteRepository.findByUserIdAndProductId(user.getId(), dtoFavoriteIU.getProduct());
 
-        favorite.setUser(user);
-        favorite.setProduct(product);
+        if (optional.isPresent()) {
+            favoriteRepository.delete(optional.get());
+            return null;
+        } else {
+            Favorite newFavorite = new Favorite();
 
-        Favorite savedFavorite = favoriteRepository.save(favorite);
-        return (globalMapper.toDtoFavorite(savedFavorite));
+            newFavorite.setUser(user);
+
+            Product product = productRepository.findById(dtoFavoriteIU.getProduct())
+                    .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, "Product not found")));
+
+            newFavorite.setProduct(product);
+
+            Favorite savedFavorite = favoriteRepository.save(newFavorite);
+            return (globalMapper.toDtoFavorite(savedFavorite));
+        }
+
 
     }
 
