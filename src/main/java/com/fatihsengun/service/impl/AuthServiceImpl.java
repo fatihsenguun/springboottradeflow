@@ -79,6 +79,7 @@ public class AuthServiceImpl implements IAuthService {
             User user = authRepository.findByEmail(dtoLoginIU.getEmail()).orElseThrow(
                     () -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, dtoLoginIU.getEmail())));
             Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findRefreshTokenByUserId(user.getId());
+            log.info("🔐 BAŞARILI GİRİŞ: Kullanıcı '{}' sisteme giriş yaptı.", dtoLoginIU.getEmail());
             if (optionalRefreshToken.isPresent()) {
                 refreshTokenRepository.delete(optionalRefreshToken.get());
 

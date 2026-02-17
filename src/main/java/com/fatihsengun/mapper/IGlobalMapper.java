@@ -3,11 +3,21 @@ package com.fatihsengun.mapper;
 import com.fatihsengun.dto.*;
 import com.fatihsengun.entity.*;
 import org.mapstruct.Mapper;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface IGlobalMapper {
+
+
+    default <T> DtoPage<T> toDtoPage(Page<T> page) {
+        if (page == null) {
+            return null;
+        }
+        return new DtoPage<>(page);
+    }
+
     User toUserEntity(DtoRegisterUI dtoRegisterUI);
 
     DtoRegister toDtoRegister(User user);

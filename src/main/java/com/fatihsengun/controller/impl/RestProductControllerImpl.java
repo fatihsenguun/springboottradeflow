@@ -2,9 +2,12 @@ package com.fatihsengun.controller.impl;
 
 import com.fatihsengun.controller.IRestProductController;
 import com.fatihsengun.controller.RestRootResponseController;
+import com.fatihsengun.dto.DtoPage;
 import com.fatihsengun.dto.DtoProduct;
 import com.fatihsengun.dto.DtoProductUI;
+import com.fatihsengun.entity.Product;
 import com.fatihsengun.entity.RootResponseEntity;
+import com.fatihsengun.mapper.IGlobalMapper;
 import com.fatihsengun.service.impl.ProductServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +24,12 @@ import java.util.UUID;
 public class RestProductControllerImpl extends RestRootResponseController implements IRestProductController {
 
 
+
     @Autowired
     private ProductServiceImpl productService;
+
+    @Autowired
+    private IGlobalMapper globalMapper;
 
     @Override
     @PostMapping("/add")
@@ -33,10 +40,12 @@ public class RestProductControllerImpl extends RestRootResponseController implem
 
     @Override
     @GetMapping("/filter")
-    public RootResponseEntity<Page<DtoProduct>> getProductsByCategories(
+    public RootResponseEntity<DtoPage<DtoProduct>> getProductsByCategories(
+
             @RequestParam(name = "categories") List<UUID> categoryIds,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        return ok(productService.getProductsWithAllCategories(categoryIds, pageable));
+
+        return ok(globalMapper.toDtoPage(productService.getProductsWithAllCategories(categoryIds, pageable)));
     }
 
     @Override

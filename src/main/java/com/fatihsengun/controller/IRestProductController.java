@@ -1,5 +1,6 @@
 package com.fatihsengun.controller;
 
+import com.fatihsengun.dto.DtoPage;
 import com.fatihsengun.dto.DtoProduct;
 import com.fatihsengun.dto.DtoProductUI;
 import com.fatihsengun.entity.RootResponseEntity;
@@ -12,8 +13,7 @@ import java.util.UUID;
 public interface IRestProductController {
     public RootResponseEntity<DtoProduct> addProduct(DtoProductUI dtoProductUI);
 
-
-    public RootResponseEntity<Page<DtoProduct>> getProductsByCategories(List<UUID> categoryIds, Pageable pageable);
+    public RootResponseEntity<DtoPage<DtoProduct>> getProductsByCategories(List<UUID> categoryIds, Pageable pageable);
 
     public RootResponseEntity<DtoProduct> delete(UUID id);
 
