@@ -7,10 +7,7 @@ import com.fatihsengun.dto.DtoFavoriteIU;
 import com.fatihsengun.entity.RootResponseEntity;
 import com.fatihsengun.service.impl.FavoriteServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,7 +21,7 @@ public class RestFavoriteControllerImpl extends RestRootResponseController imple
 
     @Override
     @PostMapping("/toggle")
-    public RootResponseEntity<DtoFavorite> addFavorite(DtoFavoriteIU dtoFavoriteIU) {
+    public RootResponseEntity<DtoFavorite> addFavorite(@RequestBody DtoFavoriteIU dtoFavoriteIU) {
 
         return ok(favoriteService.toggleFavorite(dtoFavoriteIU));
     }
