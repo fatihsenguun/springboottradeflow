@@ -6,4 +6,6 @@ import com.fatihsengun.entity.RootResponseEntity;
 
 public interface IRestCartController {
     public RootResponseEntity<DtoCart> addToCart(DtoCartUI dtoCartUI);
+
+    public RootResponseEntity<DtoCart> getMyCart();
 }

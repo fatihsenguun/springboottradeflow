@@ -17,6 +17,7 @@ import com.fatihsengun.service.ICartService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Optional;
 
@@ -78,6 +79,19 @@ public class CartServiceImpl implements ICartService {
         Cart savedCart = cartRepository.save(cart);
         return globalMapper.toDtoCart(savedCart);
 
+    }
+
+    @Override
+    public DtoCart getMyCart() {
+        User currentUser = identityService.getCurrentUser();
+        Cart cart = cartRepository.findByUser(currentUser)
+                .orElseGet(()->{
+                    Cart newCart = new Cart();
+                    newCart.setUser(currentUser);
+                    return cartRepository.save(newCart);
+                });
+
+        return globalMapper.toDtoCart(cart);
     }
 
 

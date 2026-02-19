@@ -6,4 +6,6 @@ import com.fatihsengun.dto.DtoCartUI;
 
 public interface ICartService {
     public DtoCart createCart(DtoCartUI dtoCartUI);
+
+    public DtoCart getMyCart();
 }

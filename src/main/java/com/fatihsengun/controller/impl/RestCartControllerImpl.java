@@ -8,10 +8,7 @@ import com.fatihsengun.entity.RootResponseEntity;
 import com.fatihsengun.service.impl.CartServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/rest/api/cart")
@@ -24,6 +21,12 @@ public class RestCartControllerImpl extends RestRootResponseController implement
     @PostMapping("/add")
     public RootResponseEntity<DtoCart> addToCart(@Valid @RequestBody DtoCartUI dtoCartUI) {
         return ok(cartService.createCart(dtoCartUI));
+    }
+
+    @Override
+    @GetMapping
+    public RootResponseEntity<DtoCart> getMyCart() {
+        return ok(cartService.getMyCart());
     }
 
 }
