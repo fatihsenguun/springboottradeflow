@@ -17,6 +17,6 @@ public class DtoCartItem {
 
     private DtoProduct product;
 
-    private Long quantity;
+    private Integer quantity;
 
 }

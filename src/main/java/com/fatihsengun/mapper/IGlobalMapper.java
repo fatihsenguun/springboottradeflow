@@ -46,5 +46,13 @@ public interface IGlobalMapper {
 
     DtoFavorite toDtoFavorite(Favorite favorite);
 
+    Cart toCartEntity(DtoCartUI dtoCartUI);
+
+    DtoCart toDtoCart(Cart cart);
+
+    CartItem toCartItemEntity(DtoCartItemUI dtoCartItemUI);
+
+    DtoCartItem toDtoCartItem(CartItem cartItem);
+
 
 }
