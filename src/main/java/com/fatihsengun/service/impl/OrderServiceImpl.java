@@ -9,6 +9,7 @@ import com.fatihsengun.exception.MessageType;
 import com.fatihsengun.kafka.KafkaProducerService;
 import com.fatihsengun.kafka.OrderEventModel;
 import com.fatihsengun.mapper.IGlobalMapper;
+import com.fatihsengun.repository.CartRepository;
 import com.fatihsengun.repository.OrderRepository;
 import com.fatihsengun.repository.ProductRepository;
 import com.fatihsengun.service.EmailSenderService;
@@ -17,6 +18,7 @@ import com.fatihsengun.service.IProductService;
 import jakarta.transaction.Transactional;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.MailSender;
@@ -39,13 +41,16 @@ public class OrderServiceImpl implements IOrderService {
     private IGlobalMapper globalMapper;
 
     @Autowired
-    private KafkaProducerService kafkaProducerService;
-
-    @Autowired
     private IdentityService identityService;
 
     @Autowired
     private IProductService productService;
+
+    @Autowired
+    private CartRepository cartRepository;
+
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
 
 
     @Override
@@ -87,6 +92,11 @@ public class OrderServiceImpl implements IOrderService {
             throw new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, "insufficient balance" + total));
         }
         wallet.setBalance(wallet.getBalance().subtract(total));
+        Cart cart = cartRepository.findByUser(currentUser).orElse(null);
+        if (cart != null) {
+            cart.getItems().clear();
+            cartRepository.save(cart);
+        }
 
         order.setUser(currentUser);
         order.setTotalAmount(total);
@@ -102,7 +112,8 @@ public class OrderServiceImpl implements IOrderService {
         event.setTotalAmount(total);
         event.setOrderDate(LocalDateTime.now());
 
-        kafkaProducerService.sendMessage("order-create", event);
+
+        applicationEventPublisher.publishEvent(event);
 
         return globalMapper.toDtoOrder(savedOrder);
 
@@ -121,7 +132,6 @@ public class OrderServiceImpl implements IOrderService {
         event.setTotalAmount(savedOrder.getTotalAmount());
         event.setUserId(savedOrder.getUser().getId());
 
-        kafkaProducerService.sendMessage("order-status-changed", event);
 
         return globalMapper.toDtoOrder(savedOrder);
     }

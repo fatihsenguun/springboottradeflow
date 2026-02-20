@@ -85,13 +85,46 @@ public class CartServiceImpl implements ICartService {
     public DtoCart getMyCart() {
         User currentUser = identityService.getCurrentUser();
         Cart cart = cartRepository.findByUser(currentUser)
-                .orElseGet(()->{
+                .orElseGet(() -> {
                     Cart newCart = new Cart();
                     newCart.setUser(currentUser);
                     return cartRepository.save(newCart);
                 });
 
         return globalMapper.toDtoCart(cart);
+    }
+
+    @Override
+    public DtoCart deleteCartItem(DtoCartItemUI dtoCartItemUI) {
+        User currentUser = identityService.getCurrentUser();
+        Cart cart = cartRepository.findByUser(currentUser)
+                .orElseGet(() -> {
+                    Cart newCart = new Cart();
+                    newCart.setUser(currentUser);
+                    return cartRepository.save(newCart);
+                });
+        Optional<CartItem> existingItemOpt = cart.getItems().stream()
+                .filter(item -> item.getProduct().getId().equals(dtoCartItemUI.getProductId()))
+                .findFirst();
+
+        if (existingItemOpt.isPresent()) {
+            CartItem existingItem = existingItemOpt.get();
+
+            Integer newQuantity = existingItem.getQuantity() - dtoCartItemUI.getQuantity();
+
+            if (newQuantity <= 0) {
+                cart.getItems().remove(existingItem);
+            } else {
+                existingItem.setQuantity(newQuantity);
+            }
+        } else {
+
+            throw new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, "Product not found"));
+        }
+
+        Cart savedCart = cartRepository.save(cart);
+
+        return globalMapper.toDtoCart(savedCart);
     }
 
 

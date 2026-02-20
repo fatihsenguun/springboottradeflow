@@ -3,6 +3,7 @@ package com.fatihsengun.controller.impl;
 import com.fatihsengun.controller.IRestCartController;
 import com.fatihsengun.controller.RestRootResponseController;
 import com.fatihsengun.dto.DtoCart;
+import com.fatihsengun.dto.DtoCartItemUI;
 import com.fatihsengun.dto.DtoCartUI;
 import com.fatihsengun.entity.RootResponseEntity;
 import com.fatihsengun.service.impl.CartServiceImpl;
@@ -27,6 +28,12 @@ public class RestCartControllerImpl extends RestRootResponseController implement
     @GetMapping
     public RootResponseEntity<DtoCart> getMyCart() {
         return ok(cartService.getMyCart());
+    }
+
+    @Override
+    @DeleteMapping("/delete")
+    public RootResponseEntity<DtoCart> deleteItem(@Valid @RequestBody DtoCartItemUI dtoCartItemUI) {
+        return ok(cartService.deleteCartItem(dtoCartItemUI));
     }
 
 }
