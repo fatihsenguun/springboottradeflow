@@ -54,5 +54,7 @@ public interface IGlobalMapper {
 
     DtoCartItem toDtoCartItem(CartItem cartItem);
 
+    DtoUser toDtoUser(User user);
+
 
 }

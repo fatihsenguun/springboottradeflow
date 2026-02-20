@@ -22,4 +22,6 @@ public class DtoOrder extends BaseEntity {
 
     private List<DtoOrderItem> orderItemList;
 
+    private String orderNumber;
+
 }

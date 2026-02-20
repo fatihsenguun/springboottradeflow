@@ -57,7 +57,7 @@ public class EmailSenderService {
                 user.getFirstName(),
                 user.getLastName(),
                 event.getTotalAmount(),
-                event.getOrderId()
+                event.getOrderNumber()
         );
         sendEmail(user.getEmail(), subject, body);
         log.info("✅ Order confirmation email sent: {}");

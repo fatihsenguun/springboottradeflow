@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements IOrderService {
@@ -82,6 +83,7 @@ public class OrderServiceImpl implements IOrderService {
             orderItem.setPriceAtPurchase(product.getPrice());
             orderItem.setOrder(order);
 
+
             orderItems.add(orderItem);
 
             productService.decreaseStock(product, itemUI.getQuantity());
@@ -103,6 +105,8 @@ public class OrderServiceImpl implements IOrderService {
         order.setStatus(OrderStatus.APPROVED);
         order.setOrderItemList(orderItems);
         order.setCreatedAt(LocalDateTime.now());
+        String generatedOrderNumber = "ORD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        order.setOrderNumber(generatedOrderNumber);
 
         Order savedOrder = orderRepository.save(order);
 
@@ -111,7 +115,7 @@ public class OrderServiceImpl implements IOrderService {
         event.setUserId(currentUser.getId());
         event.setTotalAmount(total);
         event.setOrderDate(LocalDateTime.now());
-
+        event.setOrderNumber(generatedOrderNumber);
 
         applicationEventPublisher.publishEvent(event);
 
@@ -144,8 +148,12 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     public List<DtoOrder> getMyOrders() {
+        User user = identityService.getCurrentUser();
 
-        return null;
+        List<Order> orders = orderRepository.findByUser(user);
+        return orders.stream().map(globalMapper::toDtoOrder)
+                .collect(Collectors.toList());
+
     }
 }
 

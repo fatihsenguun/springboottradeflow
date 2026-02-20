@@ -11,4 +11,6 @@ public interface IRestAuthController {
 
     public RootResponseEntity<DtoRefreshToken> refreshToken(DtoRefreshTokenUI dtoRefreshTokenUI);
 
+    public RootResponseEntity<DtoUser> getMyInfo();
+
 }

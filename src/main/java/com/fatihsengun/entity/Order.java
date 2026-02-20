@@ -33,4 +33,7 @@ public class Order extends BaseEntity {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItemList;
 
+    @Column(name = "order_number", unique = true)
+    private String orderNumber;
+
 }

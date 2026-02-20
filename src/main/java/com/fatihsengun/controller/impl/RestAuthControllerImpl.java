@@ -40,4 +40,11 @@ public class RestAuthControllerImpl extends RestRootResponseController implement
     public RootResponseEntity<DtoRefreshToken> refreshToken(@Valid @RequestBody DtoRefreshTokenUI dtoRefreshTokenUI) {
         return ok(refreshTokenService.refreshToken(dtoRefreshTokenUI));
     }
+
+    @Override
+    @GetMapping("/getUser")
+    public RootResponseEntity<DtoUser> getMyInfo() {
+        return ok(authService.getMyInfo());
+    }
+
 }

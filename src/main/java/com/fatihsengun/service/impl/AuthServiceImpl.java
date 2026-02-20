@@ -1,9 +1,6 @@
 package com.fatihsengun.service.impl;
 
-import com.fatihsengun.dto.DtoLogin;
-import com.fatihsengun.dto.DtoLoginIU;
-import com.fatihsengun.dto.DtoRegister;
-import com.fatihsengun.dto.DtoRegisterUI;
+import com.fatihsengun.dto.*;
 import com.fatihsengun.entity.RefreshToken;
 import com.fatihsengun.entity.User;
 import com.fatihsengun.entity.Wallet;
@@ -50,6 +47,9 @@ public class AuthServiceImpl implements IAuthService {
     @Autowired
     private RefreshTokenServiceImpl refreshTokenService;
 
+    @Autowired
+    private IdentityService identityService;
+
 
     @Override
     public DtoRegister register(DtoRegisterUI dtoRegisterUI) {
@@ -58,7 +58,6 @@ public class AuthServiceImpl implements IAuthService {
         user.setPassword(passwordEncoder.encode(dtoRegisterUI.getPassword()));
         user.setRole(RoleType.USER);
 
-        //wallet
         Wallet wallet = new Wallet();
         wallet.setBalance(BigDecimal.ZERO);
         wallet.setCurrency("TRY");
@@ -69,6 +68,13 @@ public class AuthServiceImpl implements IAuthService {
 
         User savedUser = authRepository.save(user);
         return globalMapper.toDtoRegister(savedUser);
+    }
+
+    @Override
+    public DtoUser getMyInfo() {
+        User currentUser = identityService.getCurrentUser();
+
+        return globalMapper.toDtoUser(currentUser);
     }
 
     public DtoLogin authenticate(DtoLoginIU dtoLoginIU) {

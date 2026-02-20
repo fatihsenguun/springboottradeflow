@@ -16,5 +16,6 @@ public class OrderEventModel {
     private UUID userId;
     private BigDecimal totalAmount;
     private LocalDateTime orderDate;
+    private String orderNumber;
 
 }

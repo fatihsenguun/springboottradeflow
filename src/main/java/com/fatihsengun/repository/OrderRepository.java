@@ -20,23 +20,25 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
 
     public Optional<List<Order>> findByStatus(OrderStatus status);
 
+    public List<Order> findByUser(User user);
+
+
     @Query("SELECT SUM(o.totalAmount) FROM Order o WHERE o.status!='REFUNDED' ")
     public BigDecimal sumTotalSales();
 
 
+    @Query("SELECT SUM(oi.priceAtPurchase *oi.quantity)" + "FROM OrderItem oi JOIN oi.order o" + " WHERE oi.product.id = :productId AND o.status!='REFUNDED'")
+    public BigDecimal sumTotalEarningByProductId(@Param("productId") UUID productId);
 
-     @Query("SELECT SUM(oi.priceAtPurchase *oi.quantity)"+ "FROM OrderItem oi JOIN oi.order o"+" WHERE oi.product.id = :productId AND o.status!='REFUNDED'")
-     public BigDecimal sumTotalEarningByProductId(@Param("productId") UUID productId);
-
-@Query("SELECT to_char(o.createdAt, 'YYYY-MM-DD'), SUM(o.totalAmount) "+
-        "FROM Order o " +
-        "WHERE o.status != 'REFUNDED'" +
-        "AND o.createdAt BETWEEN :startDate AND :endDate " +
-        "GROUP BY to_char(o.createdAt, 'YYYY-MM-DD') "+
-        "ORDER BY to_char(o.createdAt, 'YYYY-MM-DD') ASC")
+    @Query("SELECT to_char(o.createdAt, 'YYYY-MM-DD'), SUM(o.totalAmount) " +
+            "FROM Order o " +
+            "WHERE o.status != 'REFUNDED'" +
+            "AND o.createdAt BETWEEN :startDate AND :endDate " +
+            "GROUP BY to_char(o.createdAt, 'YYYY-MM-DD') " +
+            "ORDER BY to_char(o.createdAt, 'YYYY-MM-DD') ASC")
     List<Object[]> getDailyStatistics(
-            @Param("startDate")LocalDateTime startDate,
-            @Param("endDate")LocalDateTime endDate
-            );
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
 
 }
