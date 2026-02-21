@@ -62,7 +62,6 @@ public class OrderServiceImpl implements IOrderService {
         Wallet wallet = currentUser.getWallet();
         BigDecimal total = BigDecimal.ZERO;
 
-
         List<OrderItem> orderItems = new ArrayList<>();
         Order order = new Order();
 
@@ -87,8 +86,6 @@ public class OrderServiceImpl implements IOrderService {
             orderItems.add(orderItem);
 
             productService.decreaseStock(product, itemUI.getQuantity());
-
-
         }
         if (wallet.getBalance().compareTo(total) < 0) {
             throw new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, "insufficient balance" + total));
@@ -101,6 +98,7 @@ public class OrderServiceImpl implements IOrderService {
         }
 
         order.setUser(currentUser);
+        order.setAddress(dtoOrderUI.getAddress());
         order.setTotalAmount(total);
         order.setStatus(OrderStatus.APPROVED);
         order.setOrderItemList(orderItems);

@@ -16,4 +16,7 @@ public class DtoOrderUI {
 
     @NotEmpty
     private List<DtoOrderItemUI> items;
+
+    @NotEmpty
+    private String address;
 }

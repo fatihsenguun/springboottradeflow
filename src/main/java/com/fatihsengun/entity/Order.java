@@ -2,6 +2,7 @@ package com.fatihsengun.entity;
 
 import com.fatihsengun.enums.OrderStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,4 +37,6 @@ public class Order extends BaseEntity {
     @Column(name = "order_number", unique = true)
     private String orderNumber;
 
+    @Column(name = "address")
+    private String address;
 }

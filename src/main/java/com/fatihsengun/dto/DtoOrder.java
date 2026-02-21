@@ -5,6 +5,7 @@ import com.fatihsengun.entity.OrderItem;
 import com.fatihsengun.entity.User;
 import com.fatihsengun.enums.OrderStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,5 +24,7 @@ public class DtoOrder extends BaseEntity {
     private List<DtoOrderItem> orderItemList;
 
     private String orderNumber;
+
+    private String address;
 
 }
