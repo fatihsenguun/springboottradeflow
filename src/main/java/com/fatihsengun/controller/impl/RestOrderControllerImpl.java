@@ -55,4 +55,10 @@ public class RestOrderControllerImpl extends RestRootResponseController implemen
     public RootResponseEntity<List<DtoOrder>> getMyOrders() {
         return ok(orderService.getMyOrders());
     }
+
+    @Override
+    @GetMapping("/{id}")
+    public RootResponseEntity<DtoOrder> getOrderById(@PathVariable(name = "id") UUID id) {
+        return ok(orderService.getOrderById(id));
+    }
 }

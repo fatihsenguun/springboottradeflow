@@ -3,7 +3,6 @@ package com.fatihsengun.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -28,6 +27,8 @@ public class Wallet  extends  BaseEntity{
     @Column(nullable = false)
     private String currency;
 
+    @Version
+    private Long version=0L;
 
 
 }

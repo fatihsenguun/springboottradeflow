@@ -145,6 +145,15 @@ public class OrderServiceImpl implements IOrderService {
         return orderPage.map(globalMapper::toDtoOrder);
     }
 
+    @Override
+    public DtoOrder getOrderById(UUID id) {
+
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, "No user")));
+
+        return globalMapper.toDtoOrder(order);
+    }
+
     public List<DtoOrder> getMyOrders() {
         User user = identityService.getCurrentUser();
 

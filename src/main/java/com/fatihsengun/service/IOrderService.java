@@ -17,4 +17,6 @@ public interface IOrderService {
 
     Page<DtoOrder> getAllOrders(Pageable pageable);
 
+    public DtoOrder getOrderById(UUID id);
+
 }

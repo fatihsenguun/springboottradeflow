@@ -20,4 +20,6 @@ public interface IRestOrderController {
     public RootResponseEntity<Page<DtoOrder>> getAllOrders(Pageable pageable, Sort sort);
 
     public RootResponseEntity<List<DtoOrder>> getMyOrders();
+
+    public RootResponseEntity<DtoOrder> getOrderById(UUID id);
 }
