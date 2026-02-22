@@ -2,6 +2,7 @@ package com.fatihsengun.controller.impl;
 
 import com.fatihsengun.controller.IRestWalletController;
 import com.fatihsengun.controller.RestRootResponseController;
+import com.fatihsengun.dto.DtoDeposit;
 import com.fatihsengun.dto.DtoWallet;
 import com.fatihsengun.dto.DtoWalletUI;
 import com.fatihsengun.entity.RootResponseEntity;
@@ -23,8 +24,8 @@ public class RestWalletController extends RestRootResponseController implements 
 
     @Override
     @PostMapping("/deposit")
-    public RootResponseEntity<DtoWallet> deposit(@Valid @RequestBody BigDecimal amount) {
-        return ok(walletService.deposit(amount));
+    public RootResponseEntity<DtoWallet> deposit(@Valid @RequestBody DtoDeposit dtoDeposit) {
+        return ok(walletService.deposit(dtoDeposit));
     }
 
     @Override

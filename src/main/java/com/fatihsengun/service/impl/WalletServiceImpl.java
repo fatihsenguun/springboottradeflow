@@ -1,5 +1,6 @@
 package com.fatihsengun.service.impl;
 
+import com.fatihsengun.dto.DtoDeposit;
 import com.fatihsengun.dto.DtoWallet;
 import com.fatihsengun.entity.User;
 import com.fatihsengun.entity.Wallet;
@@ -31,15 +32,15 @@ public class WalletServiceImpl implements IWalletService {
 
     @Override
     @Transactional
-    public DtoWallet deposit(BigDecimal amount) {
+    public DtoWallet deposit(DtoDeposit dtoDeposit) {
 
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+        if (dtoDeposit.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
             throw new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, "The uploaded amount must be greater than 0!"));
         }
         User user = identityService.getCurrentUser();
         Wallet wallet = user.getWallet();
 
-        BigDecimal newBalance = wallet.getBalance().add(amount);
+        BigDecimal newBalance = wallet.getBalance().add(dtoDeposit.getAmount());
         wallet.setBalance(newBalance);
 
         return globalMapper.toDtoWallet(walletRepository.save(wallet));
