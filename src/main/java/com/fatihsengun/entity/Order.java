@@ -3,16 +3,14 @@ package com.fatihsengun.entity;
 import com.fatihsengun.enums.OrderStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
 @Table(name = "orders")
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
