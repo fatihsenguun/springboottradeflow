@@ -39,7 +39,7 @@ public class CartServiceImpl implements ICartService {
 
 
     private Cart resolveCart(String guestId) {
-        if (guestId != null && guestId.isEmpty()) {
+        if (guestId != null && !guestId.isEmpty()) {
             return cartRepository.findByGuestId(guestId)
                     .orElseGet(() -> {
                         Cart newCart = new Cart();
