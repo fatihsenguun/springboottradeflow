@@ -25,7 +25,7 @@ public class DtoOrder extends BaseEntity {
 
     private DtoUser user;
 
-    private String guestEmail;
+    private String guestId;
 
     private String orderNumber;
 

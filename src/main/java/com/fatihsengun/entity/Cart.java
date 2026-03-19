@@ -21,8 +21,7 @@ public class Cart extends BaseEntity {
     @JoinColumn(name = "user_id",  unique = true)
     private User user;
 
-    @JoinColumn(name = "guest_email", unique = true)
-    private String guestEmail;
+    private String guestId;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> items = new ArrayList<>();

@@ -18,8 +18,7 @@ public class DtoOrderUI {
     @NotEmpty
     private List<DtoOrderItemUI> items;
 
-    @Email(message = "Please provide a valid email address")
-    private String guestEmail;
+    private String guestId;
 
     @NotEmpty
     private String address;

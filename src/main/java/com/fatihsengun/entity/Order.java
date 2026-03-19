@@ -21,8 +21,7 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @JoinColumn(name = "guest_email")
-    private String guestEmail;
+    private String guestId;
 
     @Column(nullable = false)
     private BigDecimal totalAmount;

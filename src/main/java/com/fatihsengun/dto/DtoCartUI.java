@@ -17,6 +17,5 @@ public class DtoCartUI {
     @NotEmpty
     private List<DtoCartItemUI> items;
 
-    @Email(message = "Please provide a valid email address")
-    private String guestEmail;
+    private String guestId;
 }
