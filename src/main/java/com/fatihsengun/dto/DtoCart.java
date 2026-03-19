@@ -11,5 +11,7 @@ public class DtoCart {
 
     private DtoUser user;
 
+    private String guestEmail;
+
     private List<DtoCartItem> items;
 }

@@ -1,5 +1,6 @@
 package com.fatihsengun.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +17,9 @@ public class DtoOrderUI {
 
     @NotEmpty
     private List<DtoOrderItemUI> items;
+
+    @Email(message = "Please provide a valid email address")
+    private String guestEmail;
 
     @NotEmpty
     private String address;

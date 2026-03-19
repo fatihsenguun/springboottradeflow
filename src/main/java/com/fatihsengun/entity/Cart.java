@@ -18,8 +18,11 @@ import java.util.UUID;
 public class Cart extends BaseEntity {
 
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    @JoinColumn(name = "user_id",  unique = true)
     private User user;
+
+    @JoinColumn(name = "guest_email", unique = true)
+    private String guestEmail;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> items = new ArrayList<>();

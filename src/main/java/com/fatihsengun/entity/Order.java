@@ -18,8 +18,11 @@ import java.util.List;
 public class Order extends BaseEntity {
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
+
+    @JoinColumn(name = "guest_email")
+    private String guestEmail;
 
     @Column(nullable = false)
     private BigDecimal totalAmount;
