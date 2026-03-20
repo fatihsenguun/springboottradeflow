@@ -8,7 +8,7 @@ import com.fatihsengun.entity.RootResponseEntity;
 public interface IRestCartController {
     public RootResponseEntity<DtoCart> addToCart(DtoCartUI dtoCartUI);
 
-    public RootResponseEntity<DtoCart> getMyCart();
+    public RootResponseEntity<DtoCart> getMyCart(String guestId);
 
-    public RootResponseEntity<DtoCart> deleteItem(DtoCartItemUI dtoCartItemUI);
+    public RootResponseEntity<DtoCart> deleteItem(DtoCartItemUI dtoCartItemUI,String guestId);
 }

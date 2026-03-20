@@ -37,7 +37,6 @@ public class CartServiceImpl implements ICartService {
     @Autowired
     private IGlobalMapper globalMapper;
 
-
     private Cart resolveCart(String guestId) {
         if (guestId != null && !guestId.isEmpty()) {
             return cartRepository.findByGuestId(guestId)
@@ -91,27 +90,16 @@ public class CartServiceImpl implements ICartService {
     }
 
     @Override
-    public DtoCart getMyCart() {
-        User currentUser = identityService.getCurrentUser();
-        Cart cart = cartRepository.findByUser(currentUser)
-                .orElseGet(() -> {
-                    Cart newCart = new Cart();
-                    newCart.setUser(currentUser);
-                    return cartRepository.save(newCart);
-                });
+    public DtoCart getMyCart(String guestId) {
+        Cart cart = resolveCart(guestId);
 
         return globalMapper.toDtoCart(cart);
     }
 
     @Override
-    public DtoCart deleteCartItem(DtoCartItemUI dtoCartItemUI) {
-        User currentUser = identityService.getCurrentUser();
-        Cart cart = cartRepository.findByUser(currentUser)
-                .orElseGet(() -> {
-                    Cart newCart = new Cart();
-                    newCart.setUser(currentUser);
-                    return cartRepository.save(newCart);
-                });
+    public DtoCart deleteCartItem(DtoCartItemUI dtoCartItemUI, String guestId) {
+        Cart cart = resolveCart(guestId);
+
         Optional<CartItem> existingItemOpt = cart.getItems().stream()
                 .filter(item -> item.getProduct().getId().equals(dtoCartItemUI.getProductId()))
                 .findFirst();

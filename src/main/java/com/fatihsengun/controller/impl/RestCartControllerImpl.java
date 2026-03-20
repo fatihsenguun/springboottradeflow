@@ -26,14 +26,14 @@ public class RestCartControllerImpl extends RestRootResponseController implement
 
     @Override
     @GetMapping
-    public RootResponseEntity<DtoCart> getMyCart() {
-        return ok(cartService.getMyCart());
+    public RootResponseEntity<DtoCart> getMyCart(String guestId) {
+        return ok(cartService.getMyCart(guestId));
     }
 
     @Override
     @DeleteMapping("/delete")
-    public RootResponseEntity<DtoCart> deleteItem(@Valid @RequestBody DtoCartItemUI dtoCartItemUI) {
-        return ok(cartService.deleteCartItem(dtoCartItemUI));
+    public RootResponseEntity<DtoCart> deleteItem(@Valid @RequestBody DtoCartItemUI dtoCartItemUI,String guestId) {
+        return ok(cartService.deleteCartItem(dtoCartItemUI,guestId));
     }
 
 }
