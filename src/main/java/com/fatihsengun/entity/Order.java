@@ -1,6 +1,7 @@
 package com.fatihsengun.entity;
 
 import com.fatihsengun.enums.OrderStatus;
+import com.fatihsengun.enums.PaymentType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
@@ -25,6 +26,11 @@ public class Order extends BaseEntity {
 
     @Column(nullable = false)
     private BigDecimal totalAmount;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentType paymentMethod;
+
+    private String email;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

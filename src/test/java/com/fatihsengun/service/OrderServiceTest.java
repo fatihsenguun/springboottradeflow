@@ -113,6 +113,7 @@ public class OrderServiceTest {
         dtoOrderUI.setAddress("Test address");
 
 
+
         //Act
         when(identityService.getCurrentUser()).thenReturn(sharedTestUser);
         when(productService.getProductById(sharedTestProduct.getId())).thenReturn(sharedTestProduct);

@@ -63,7 +63,7 @@ public class CartServiceImpl implements ICartService {
     @Transactional
     public DtoCart createCart(DtoCartUI dtoCartUI) {
         Cart cart = resolveCart(dtoCartUI.getGuestId());
-
+        System.out.println("kart: "+ cart);
 
         for (DtoCartItemUI itemUI : dtoCartUI.getItems()) {
             Product product = productRepository.findById(itemUI.getProductId())

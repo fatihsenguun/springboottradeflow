@@ -3,6 +3,7 @@ package com.fatihsengun.service.impl;
 import com.fatihsengun.dto.*;
 import com.fatihsengun.entity.*;
 import com.fatihsengun.enums.OrderStatus;
+import com.fatihsengun.enums.PaymentType;
 import com.fatihsengun.exception.BaseException;
 import com.fatihsengun.exception.ErrorMessage;
 import com.fatihsengun.exception.MessageType;
@@ -54,16 +55,23 @@ public class OrderServiceImpl implements IOrderService {
     private ApplicationEventPublisher applicationEventPublisher;
 
 
-
-
     @Override
     @Transactional
     public DtoOrder createOrder(DtoOrderUI dtoOrderUI) {
 
-        User currentUser = identityService.getCurrentUser();
-        Wallet wallet = currentUser.getWallet();
-        BigDecimal total = BigDecimal.ZERO;
+        User  currentUser = identityService.getCurrentUser();
 
+        if (currentUser == null) {
+            if (dtoOrderUI.getPaymentMethod() == PaymentType.WALLET) {
+                throw new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, "Guests cannot use the wallet. Please use a credit card."));
+            }
+            if (dtoOrderUI.getEmail() == null || dtoOrderUI.getEmail().isEmpty()) {
+                throw new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, "Guests must provide an email address for the receipt."));
+            }
+        }
+        System.out.println(currentUser+"  "+dtoOrderUI.getGuestId());
+
+        BigDecimal total = BigDecimal.ZERO;
         List<OrderItem> orderItems = new ArrayList<>();
         Order order = new Order();
 
@@ -75,7 +83,6 @@ public class OrderServiceImpl implements IOrderService {
             }
 
             BigDecimal lineTotal = product.getPrice().multiply(BigDecimal.valueOf(itemUI.getQuantity()));
-
             total = total.add(lineTotal);
 
             OrderItem orderItem = new OrderItem();
@@ -84,16 +91,29 @@ public class OrderServiceImpl implements IOrderService {
             orderItem.setPriceAtPurchase(product.getPrice());
             orderItem.setOrder(order);
 
-
             orderItems.add(orderItem);
 
             productService.decreaseStock(product, itemUI.getQuantity());
         }
-        if (wallet.getBalance().compareTo(total) < 0) {
-            throw new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, "insufficient balance" + total));
+        if (dtoOrderUI.getPaymentMethod() == PaymentType.WALLET) {
+            Wallet wallet = currentUser.getWallet();
+            if (wallet.getBalance().compareTo(total) < 0) {
+                throw new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, "insufficient balance" + total));
+            }
+            wallet.setBalance(wallet.getBalance().subtract(total));
+        } else if (dtoOrderUI.getPaymentMethod() == PaymentType.CREDIT_CART) {
+            System.out.println("Processing dummy credit card for amount: " + total);
+        } else {
+            throw new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, "Invalid payment method."));
         }
-        wallet.setBalance(wallet.getBalance().subtract(total));
-        Cart cart = cartRepository.findByUser(currentUser).orElse(null);
+
+
+        Cart cart = null;
+        if (dtoOrderUI.getGuestId() != null && !dtoOrderUI.getGuestId().isEmpty()) {
+            cart = cartRepository.findByGuestId(dtoOrderUI.getGuestId()).orElse(null);
+        } else if (currentUser != null) {
+            cart = cartRepository.findByUser(currentUser).orElse(null);
+        }
         if (cart != null) {
             cart.getItems().clear();
             cartRepository.save(cart);
@@ -104,15 +124,19 @@ public class OrderServiceImpl implements IOrderService {
         order.setTotalAmount(total);
         order.setStatus(OrderStatus.APPROVED);
         order.setOrderItemList(orderItems);
+        String email = (currentUser != null) ? currentUser.getEmail() : dtoOrderUI.getEmail();
+        order.setEmail(email);
+
         order.setCreatedAt(LocalDateTime.now());
         String generatedOrderNumber = "ORD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         order.setOrderNumber(generatedOrderNumber);
+
 
         Order savedOrder = orderRepository.save(order);
 
         OrderEventModel event = new OrderEventModel();
         event.setOrderId(savedOrder.getId());
-        event.setUserId(currentUser.getId());
+        event.setUserId(currentUser != null ? currentUser.getId() : null);
         event.setTotalAmount(total);
         event.setOrderDate(LocalDateTime.now());
         event.setOrderNumber(generatedOrderNumber);

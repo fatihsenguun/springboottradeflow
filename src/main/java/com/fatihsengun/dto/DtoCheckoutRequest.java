@@ -1,30 +1,22 @@
 package com.fatihsengun.dto;
 
 import com.fatihsengun.enums.PaymentType;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
+import com.fatihsengun.enums.RoleType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class DtoOrderUI {
-
-    @NotEmpty
-    private List<DtoOrderItemUI> items;
-
-    private String guestId;
+@NoArgsConstructor
+public class DtoCheckoutRequest {
 
     private PaymentType paymentMethod;
 
     private String email;
 
-    @NotEmpty
-    private String address;
 }
