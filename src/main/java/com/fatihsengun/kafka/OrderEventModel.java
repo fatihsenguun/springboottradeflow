@@ -14,6 +14,8 @@ import java.util.UUID;
 public class OrderEventModel {
     private UUID orderId;
     private UUID userId;
+    private String guestId;
+    private String email;
     private BigDecimal totalAmount;
     private LocalDateTime orderDate;
     private String orderNumber;

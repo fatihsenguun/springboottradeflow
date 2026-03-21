@@ -48,19 +48,34 @@ public class EmailSenderService {
 
 
     public void sendOrderCreateMail(OrderEventModel event) {
-        User user = authRepository.findById(event.getUserId()).orElseThrow(
-                () -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, "userId: " + event.getUserId())));
+        User user = null;
+        if (event.getUserId()!=null){
+            user = authRepository.findById(event.getUserId()).orElse(null);
+        }
 
         String subject = "Your Order Has Been Received! \uD83D\uDCE6 ";
-        String body = String.format(
-                "Dear %s %s,\n\nYour order with a total amount of %.2f TL has been successfully received.\nOrder Number: %s\n\nThank you for choosing us!",
-                user.getFirstName(),
-                user.getLastName(),
-                event.getTotalAmount(),
-                event.getOrderNumber()
-        );
-        sendEmail(user.getEmail(), subject, body);
-        log.info("✅ Order confirmation email sent: {}");
+        if (user!=null){
+            String body = String.format(
+                    "Dear %s %s,\n\nYour order with a total amount of %.2f TL has been successfully received.\nOrder Number: %s\n\nThank you for choosing us!",
+                    user.getFirstName(),
+                    user.getLastName(),
+                    event.getTotalAmount(),
+                    event.getOrderNumber()
+            );
+            sendEmail(user.getEmail(), subject, body);
+            log.info("✅ Order confirmation email sent: {}");
+        }else {
+            String body = String.format(
+                    "Dear Guest, Your order with a total amount of %.2f TL has been successfully received.\nOrder Number: %s\n\nThank you for choosing us!",
+                    event.getTotalAmount(),
+                    event.getOrderNumber()
+            );
+            sendEmail(event.getEmail(), subject, body);
+            log.info("✅ Order confirmation email sent: {}");
+        }
+
+
+
 
     }
     public void sendUpdateOrder(OrderEventModel event) {

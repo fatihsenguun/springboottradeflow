@@ -59,7 +59,7 @@ public class OrderServiceImpl implements IOrderService {
     @Transactional
     public DtoOrder createOrder(DtoOrderUI dtoOrderUI) {
 
-        User  currentUser = identityService.getCurrentUser();
+        User currentUser = identityService.getCurrentUser();
 
         if (currentUser == null) {
             if (dtoOrderUI.getPaymentMethod() == PaymentType.WALLET) {
@@ -69,7 +69,6 @@ public class OrderServiceImpl implements IOrderService {
                 throw new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, "Guests must provide an email address for the receipt."));
             }
         }
-        System.out.println(currentUser+"  "+dtoOrderUI.getGuestId());
 
         BigDecimal total = BigDecimal.ZERO;
         List<OrderItem> orderItems = new ArrayList<>();
@@ -137,6 +136,8 @@ public class OrderServiceImpl implements IOrderService {
         OrderEventModel event = new OrderEventModel();
         event.setOrderId(savedOrder.getId());
         event.setUserId(currentUser != null ? currentUser.getId() : null);
+        event.setGuestId(dtoOrderUI.getGuestId() != null ? dtoOrderUI.getGuestId() : null);
+        event.setEmail(dtoOrderUI.getEmail() != null ? dtoOrderUI.getEmail() : null);
         event.setTotalAmount(total);
         event.setOrderDate(LocalDateTime.now());
         event.setOrderNumber(generatedOrderNumber);
